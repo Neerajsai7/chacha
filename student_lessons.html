@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Lessons</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Gochi+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff3e0; /* Student Theme */
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 3px solid #2d3748;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            height: 100%;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-title {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 2rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #2d3748;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .subject-btn {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 3px solid #2d3748;
+            border-radius: 15px; 
+            background: white;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.4rem;
+            color: #2b6cb0; 
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            padding-left: 25px;
+        }
+
+        .subject-btn:hover, .subject-btn.active {
+            background-color: #ebf8ff;
+            transform: translateX(5px);
+            border-color: #2b6cb0;
+        }
+
+        /* AI CHATBOT BUTTON (Bottom of Sidebar) */
+        .chatbot-btn {
+            margin-top: auto; 
+            background-color: white;
+            border: 3px solid #2d3748;
+            border-radius: 15px;
+            padding: 15px;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.3rem;
+            text-align: center;
+            cursor: pointer;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s;
+        }
+        .chatbot-btn:hover { 
+            background-color: #edf2f7; 
+            transform: scale(1.05);
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-family: 'Gochi Hand', cursive;
+            text-decoration: none;
+            color: #2d3748;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 Columns like the sketch */
+            gap: 30px;
+            max-width: 1100px;
+            margin: 40px auto 0 auto;
+        }
+
+        .lesson-card {
+            background: white;
+            border: 3px solid #2d3748;
+            border-radius: 20px;
+            height: 180px; /* Rectangular shape */
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .lesson-number {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.5rem;
+            color: #2d3748;
+            text-decoration: underline;
+        }
+
+        .lesson-topic {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #4a5568;
+        }
+
+        /* Decorative icons inside cards to match the sketch vibe */
+        .card-decoration {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 2rem;
+            color: #cbd5e0;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 900px) {
+            .lessons-grid { grid-template-columns: 1fr; }
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; height: auto; padding: 20px; border-right: none; border-bottom: 3px solid #2d3748; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-title">SUBJECTS <i class="fas fa-chevron-down"></i></div>
+
+        <button class="subject-btn active" onclick="loadSubject('maths')">MATHS</button>
+        <button class="subject-btn" onclick="loadSubject('science')">SCIENCE</button>
+        <button class="subject-btn" onclick="loadSubject('english')">ENGLISH</button>
+        <button class="subject-btn" onclick="loadSubject('ss')">S.S</button>
+
+        <button class="chatbot-btn" onclick="window.location.href='chatbot.html'">
+            <i class="fas fa-robot"></i> AI CHATBOT
+        </button>
+    </aside>
+
+    <main class="main-content">
+        <a href="student.html" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+
+        <div class="lessons-grid" id="lessons-container">
+            </div>
+    </main>
+
+    <script>
+        // Data: Topics and YouTube Search Links for each subject
+        const subjects = {
+            maths: [
+                { title: "Algebra Basics", icon: "fa-calculator" },
+                { title: "Geometry Shapes", icon: "fa-shapes" },
+                { title: "Fractions", icon: "fa-pizza-slice" },
+                { title: "Decimals", icon: "fa-percent" },
+                { title: "Multiplication", icon: "fa-times" },
+                { title: "Word Problems", icon: "fa-question" }
+            ],
+            science: [
+                { title: "The Solar System", icon: "fa-sun" },
+                { title: "Photosynthesis", icon: "fa-leaf" },
+                { title: "Human Body", icon: "fa-heart" },
+                { title: "Water Cycle", icon: "fa-cloud-rain" },
+                { title: "Forces & Motion", icon: "fa-rocket" },
+                { title: "States of Matter", icon: "fa-flask" }
+            ],
+            english: [
+                { title: "Nouns & Verbs", icon: "fa-book" },
+                { title: "Adjectives", icon: "fa-pen-fancy" },
+                { title: "Story Writing", icon: "fa-feather" },
+                { title: "Reading Skills", icon: "fa-glasses" },
+                { title: "Punctuation", icon: "fa-quote-left" },
+                { title: "Vocabulary", icon: "fa-language" }
+            ],
+            ss: [
+                { title: "Ancient Civilizations", icon: "fa-landmark" },
+                { title: "Maps & Globes", icon: "fa-globe-americas" },
+                { title: "Government Basics", icon: "fa-gavel" },
+                { title: "Climate Zones", icon: "fa-temperature-high" },
+                { title: "Resources", icon: "fa-tree" },
+                { title: "History Heroes", icon: "fa-user-astronaut" }
+            ]
+        };
+
+        function loadSubject(subjectKey) {
+            const container = document.getElementById('lessons-container');
+            const lessonList = subjects[subjectKey];
+            
+            // Clear current cards
+            container.innerHTML = '';
+
+            // Generate 6 Cards
+            lessonList.forEach((lesson, index) => {
+                const lessonNum = index + 1;
+                // Create a generic YouTube Search URL
+                const ytLink = `https://www.youtube.com/results?search_query=grade+5+${subjectKey}+${lesson.title.replace(/ /g, '+')}`;
+
+                const cardHTML = `
+                    <div class="lesson-card" onclick="window.open('${ytLink}', '_blank')">
+                        <div class="lesson-number">LESSON ${lessonNum}:</div>
+                        <div class="lesson-topic">(${lesson.title})</div>
+                        <i class="fas ${lesson.icon} card-decoration"></i>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+
+            // Update active button visual
+            document.querySelectorAll('.subject-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText.toLowerCase() === (subjectKey === 'ss' ? 's.s' : subjectKey)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Load Maths by default
+        loadSubject('maths');
+    </script>
+
+</body>
+</html>

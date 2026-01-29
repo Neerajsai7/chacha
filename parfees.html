@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Fees - Edu Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Gochi+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #e8f5e9; /* Soothing Light Green Background */
+            height: 100vh;
+            display: flex;
+            color: #2d3748;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR (Consistent with Parent Portal) --- */
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 3px solid #2d3748;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            height: 100%;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .menu-icon-top {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 110px;
+            height: 110px;
+            border: 3px solid #2d3748;
+            border-radius: 50%;
+            background-color: #fff;
+            margin-bottom: 15px;
+            /* Ensure parent.jpeg exists */
+            background-image: url('parent.jpeg'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .parent-name {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .divider {
+            width: 100%;
+            height: 3px;
+            background-color: #2d3748;
+            margin: 20px 0;
+            border-radius: 2px;
+        }
+
+        .back-btn {
+            margin-top: auto;
+            padding: 12px 25px;
+            background-color: white;
+            color: #2d3748;
+            border: 3px solid #2d3748;
+            border-radius: 20px;
+            text-decoration: none;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background-color: #ffe4e4; border-color: #c53030; color: #c53030; }
+
+        /* --- MAIN CONTENT AREA --- */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .page-header {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 2.5rem;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        /* --- 1. TOP PROFILE & PENDING CARD --- */
+        .top-fee-card {
+            display: flex;
+            background: white;
+            border: 3px solid #2d3748;
+            border-radius: 25px;
+            overflow: hidden;
+            min-height: 130px;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.05);
+        }
+
+        .student-info-side {
+            flex: 1.5;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            gap: 20px;
+            border-right: 3px solid #2d3748;
+        }
+
+        .student-circle {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #2d3748;
+            border-radius: 50%;
+            background-color: #edf2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #2d3748;
+        }
+
+        .info-text h2 { font-family: 'Gochi Hand'; font-size: 2rem; margin-bottom: 5px; }
+        .info-text p { font-weight: 600; color: #4a5568; }
+
+        .pending-side {
+            flex: 1;
+            background-color: #fff5f5; /* Soft Red tint for pending */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .pending-header { font-family: 'Gochi Hand'; font-size: 1.5rem; color: #c53030; margin-bottom: 5px; }
+        .pending-amount { font-size: 3rem; font-weight: 700; color: #c53030; }
+
+        /* --- 2. TABS SECTION --- */
+        .fee-tabs {
+            display: flex;
+            background: white;
+            border: 3px solid #2d3748;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            background: white;
+            font-family: 'Gochi Hand';
+            font-size: 1.5rem;
+            cursor: pointer;
+            border-right: 3px solid #2d3748;
+            transition: 0.2s;
+            color: #2d3748;
+        }
+        .tab-btn:last-child { border-right: none; }
+        .tab-btn:hover { background-color: #e6fffa; } /* Light teal hover */
+        
+        .tab-btn.active {
+            background-color: #319795; /* Teal active state */
+            color: white;
+        }
+
+        /* --- 3. BOTTOM SPLIT GRID --- */
+        .bottom-split {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr; /* Table gets slightly more space */
+            gap: 25px;
+            flex: 1;
+        }
+
+        /* LEFT: Fee Table Card */
+        .table-card {
+            background: white;
+            border: 3px solid #2d3748;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.05);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            font-family: 'Gochi Hand';
+            font-size: 1.4rem;
+            padding: 15px;
+            background-color: #e6fffa; /* Light teal header */
+            border-bottom: 3px solid #2d3748;
+            border-right: 3px solid #2d3748;
+            text-align: left;
+        }
+        th:last-child { border-right: none; }
+        
+        td {
+            padding: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #2d3748;
+            border-right: 2px solid #2d3748;
+        }
+        td:last-child { border-right: none; }
+        tr:last-child td { border-bottom: none; }
+
+        /* RIGHT Column Stack */
+        .right-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .details-card {
+            background: white;
+            border: 3px solid #2d3748;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: 5px 5px 0px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-heading {
+            font-family: 'Gochi Hand';
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Balance Details Specifics */
+        .balance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .balance-amount { font-size: 1.8rem; font-weight: 700; }
+        .dashed-separator { border-bottom: 3px dashed #cbd5e0; margin: 20px 0; }
+
+        /* Payment Mode Specifics */
+        .mode-option {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .custom-radio {
+            width: 24px; height: 24px;
+            border: 3px solid #2d3748; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .mode-option.selected .custom-radio::after {
+            content: ''; width: 12px; height: 12px;
+            background: #2d3748; border-radius: 50%;
+        }
+
+        /* Pay Button Styling */
+        .pay-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #2d3748;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        }
+        .pay-btn:hover {
+            background-color: #319795; /* Teal color */
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+        }
+        .pay-btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            body { flex-direction: column; height: auto; overflow: auto; }
+            .sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 3px solid #2d3748; }
+            .top-fee-card { flex-direction: column; }
+            .student-info-side { border-right: none; border-bottom: 3px solid #2d3748; }
+            .bottom-split { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="menu-icon-top"><i class="fas fa-bars"></i></div>
+        <div class="profile-pic"></div>
+        <div class="parent-name">[NAME]</div>
+        <div class="divider"></div>
+        <div style="font-family: 'Gochi Hand'; font-size: 1.3rem; margin-bottom: 20px;">PARENT PORTAL</div>
+        <a href="index.html" class="back-btn">Log Out</a>
+    </aside>
+
+    <main class="main-content">
+        
+        <h1 class="page-header">STUDENT FEES</h1>
+
+        <div class="top-fee-card">
+            <div class="student-info-side">
+                <div class="student-circle">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="info-text">
+                    <h2>ARYAN</h2>
+                    <p>GRADE: 7 | AGE: 12</p>
+                </div>
+            </div>
+            <div class="pending-side">
+                <div class="pending-header">PAYMENT PENDING</div>
+                <div class="pending-amount">₹ 1000</div>
+            </div>
+        </div>
+
+        <div class="fee-tabs">
+            <button class="tab-btn">PAYMENT HISTORY</button>
+            <button class="tab-btn active">PAYMENTS DUE</button>
+        </div>
+
+        <div class="bottom-split">
+            
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>FEE</th>
+                            <th>AMOUNT</th>
+                            <th>DUE DATE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TUITION</td>
+                            <td>₹ 500</td>
+                            <td>05/02/2026</td>
+                        </tr>
+                        <tr>
+                            <td>TUITION</td>
+                            <td>₹ 500</td>
+                            <td>05/03/2026</td>
+                        </tr>
+                        <tr>
+                            <td>MATERIALS</td>
+                            <td>₹ 750</td>
+                            <td>10/02/2026</td>
+                        </tr>
+                        <tr>
+                            <td>TUITION</td>
+                            <td>₹ 1000</td>
+                            <td>05/04/2026</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="right-stack">
+                
+                <div class="details-card">
+                    <h3 class="card-heading">BALANCE DETAILS</h3>
+                    
+                    <div class="balance-row">
+                        <span>UNPAID FEES :</span>
+                        <span class="balance-amount" style="color: #c53030;">₹ 2750</span>
+                    </div>
+                    
+                    <div class="dashed-separator"></div>
+                    
+                    <div class="balance-row">
+                        <span>FEES PAID :</span>
+                        <span class="balance-amount" style="color: #38a169;">₹ 550</span>
+                    </div>
+                </div>
+
+                <div class="details-card">
+                    <h3 class="card-heading">MODE OF PAYMENT</h3>
+                    <div class="mode-option selected" onclick="selectMode(this)">
+                        <div class="custom-radio"></div> UPI
+                    </div>
+                    <div class="mode-option" onclick="selectMode(this)">
+                        <div class="custom-radio"></div> CASH
+                    </div>
+
+                    <button class="pay-btn" onclick="alert('Proceeding to Payment Gateway...')">
+                        PAY NOW
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Simple script to toggle radio button selection visually
+        function selectMode(element) {
+            document.querySelectorAll('.mode-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+    </script>
+
+</body>
+</html>

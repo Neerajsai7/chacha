@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tutor Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: #050a14; /* Deep space blue */
+            font-family: 'Roboto Mono', monospace;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00f3ff; /* Neon Cyan */
+            overflow: hidden;
+        }
+
+        /* --- CONTAINER --- */
+        .interface-container {
+            width: 90%;
+            max-width: 1000px;
+            height: 80vh;
+            border: 2px solid #00f3ff;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+            display: flex;
+            background: radial-gradient(circle at 30% 50%, #0a1525 0%, #050a14 100%);
+            position: relative;
+        }
+
+        /* --- LEFT SIDE: AVATAR --- */
+        .bot-visual {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid rgba(0, 243, 255, 0.3);
+            position: relative;
+        }
+
+        .hologram-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 2px solid #00f3ff;
+            box-shadow: 0 0 20px #00f3ff, inset 0 0 20px #00f3ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 3s infinite;
+        }
+
+        .bot-icon {
+            font-size: 5rem;
+            color: white;
+            text-shadow: 0 0 10px #00f3ff;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px #00f3ff, inset 0 0 20px #00f3ff; }
+            50% { box-shadow: 0 0 40px #00f3ff, inset 0 0 40px #00f3ff; }
+            100% { box-shadow: 0 0 20px #00f3ff, inset 0 0 20px #00f3ff; }
+        }
+
+        /* --- RIGHT SIDE: CHAT AREA --- */
+        .chat-area {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+        }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 243, 255, 0.3);
+            padding-right: 10px;
+        }
+
+        /* Message Bubbles */
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+            font-size: 0.9rem;
+        }
+
+        .user-msg {
+            background-color: rgba(0, 243, 255, 0.1);
+            border: 1px solid #00f3ff;
+            align-self: flex-end;
+            margin-left: auto;
+            text-align: right;
+            color: white;
+        }
+
+        .bot-msg {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(0, 243, 255, 0.5);
+            align-self: flex-start;
+            color: #00f3ff;
+        }
+
+        /* --- INPUTS --- */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sketch-input {
+            background: transparent;
+            border: 2px solid #00f3ff;
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: box-shadow 0.3s;
+        }
+
+        .sketch-input:focus {
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+        }
+
+        .send-btn {
+            background-color: #00f3ff;
+            color: #050a14;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .send-btn:hover { background-color: white; box-shadow: 0 0 15px white; }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: rgba(255,255,255,0.5);
+            text-decoration: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .back-btn:hover { color: white; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .interface-container { flex-direction: column; height: 95vh; }
+            .bot-visual { flex: 0.3; border-right: none; border-bottom: 1px solid rgba(0,243,255,0.3); }
+            .hologram-circle { width: 100px; height: 100px; }
+            .bot-icon { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="interface-container">
+        <a href="student_lessons.html" class="back-btn">X CLOSE</a>
+
+        <div class="bot-visual">
+            <div class="hologram-circle">
+                <i class="fas fa-headset bot-icon"></i>
+            </div>
+            <p style="margin-top: 20px; letter-spacing: 2px;">AI TUTOR V1.0</p>
+        </div>
+
+        <div class="chat-area">
+            <div class="chat-history" id="chat-history">
+                <div class="message bot-msg">
+                    HELLO STUDENT. SELECT A SUBJECT OR ASK ME A QUESTION.
+                </div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" class="sketch-input" id="user-input" placeholder="ENTER YOUR DOUBT HERE...">
+                <button class="send-btn" onclick="sendMessage()">SEND QUERY</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const inputField = document.getElementById('user-input');
+            const chatHistory = document.getElementById('chat-history');
+            const userText = inputField.value;
+
+            if (userText.trim() === "") return;
+
+            // 1. Add User Message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-msg';
+            userDiv.innerText = userText;
+            chatHistory.appendChild(userDiv);
+
+            // Clear input
+            inputField.value = "";
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            // 2. Simulate Bot Response (Prototype)
+            setTimeout(() => {
+                const botDiv = document.createElement('div');
+                botDiv.className = 'message bot-msg';
+                botDiv.innerText = "I AM A PROTOTYPE. BACKEND INTEGRATION COMING SOON.";
+                chatHistory.appendChild(botDiv);
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }, 1000);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test & Exams - Edu Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Gochi+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ebf8ff; 
+            height: 100vh;
+            display: flex;
+            color: #2d3748;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 3px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .menu-icon-top {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #cbd5e0;
+            margin-bottom: 10px;
+            background-image: url('teacher.jpeg'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .teacher-name {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: #e2e8f0;
+            margin: 20px 0;
+        }
+
+        .back-btn {
+            margin-top: auto;
+            padding: 10px 20px;
+            background-color: #2d3748;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .back-btn:hover { background-color: #4a5568; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Increased gap for better spacing */
+        }
+
+        .page-header {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            color: #2d3748; 
+            flex-shrink: 0;
+        }
+
+        /* --- FIXED TABS CSS (The part that was broken) --- */
+        .grade-tabs {
+            display: flex;
+            gap: 20px; /* More space between buttons */
+            overflow-x: auto; 
+            padding: 10px 5px; /* Padding inside so borders don't get cut */
+            
+            /* These 3 lines prevent squashing: */
+            flex-shrink: 0; 
+            min-height: 80px; 
+            align-items: center; 
+        }
+
+        .tab-btn {
+            background-color: white;
+            color: #2d3748;
+            border: 2px solid #2d3748;
+            padding: 0 30px; /* Horizontal padding */
+            height: 50px;    /* Fixed height so they don't flatten */
+            border-radius: 50px; /* Fully rounded ends */
+            
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            
+            /* Flex settings to center text and prevent shrinking */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap; 
+            flex-shrink: 0; 
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover { 
+            background-color: #edf2f7; 
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .tab-btn.active {
+            background-color: #2d3748;
+            color: white; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transform: scale(1.05);
+        }
+
+        /* ACTION BAR */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            flex-shrink: 0;
+        }
+
+        .filters {
+            display: flex;
+            gap: 0;
+            background: white;
+            border: 2px solid #2d3748;
+            border-radius: 12px;
+            overflow: hidden;
+            height: 45px; /* Fixed height for consistency */
+        }
+
+        .filter-btn {
+            padding: 0 25px;
+            border: none;
+            background: none;
+            color: #2d3748;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border-right: 1px solid #cbd5e0;
+            height: 100%;
+            transition: background 0.2s;
+        }
+        .filter-btn:last-child { border-right: none; }
+        .filter-btn:hover { background-color: #edf2f7; }
+        .filter-btn.active { background-color: #2d3748; color: white; }
+
+        .create-btn {
+            background-color: white;
+            color: #2d3748;
+            border: 2px solid #2d3748;
+            border-radius: 12px;
+            padding: 0 25px;
+            height: 45px;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            transition: all 0.1s;
+        }
+        .create-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px rgba(0,0,0,0.1); }
+
+        /* TABLE */
+        .table-container {
+            background: white;
+            border: 2px solid #2d3748;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            min-height: 300px; 
+            flex-shrink: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f7fafc;
+            color: #2d3748;
+            padding: 18px;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #2d3748;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 1rem;
+            color: #4a5568;
+        }
+
+        /* Status Badges */
+        .status { padding: 6px 14px; border-radius: 12px; font-size: 0.85rem; font-weight: bold; display: inline-block; letter-spacing: 0.5px; }
+        .pending { background-color: #feebc8; color: #c05621; }
+        .checked { background-color: #c6f6d5; color: #276749; }
+
+        /* BOTTOM CARDS */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 10px;
+            height: 250px;
+            flex-shrink: 0;
+            padding-bottom: 20px; /* Extra space at bottom of scroll */
+        }
+
+        .bottom-card {
+            background: white;
+            border: 2px solid #2d3748;
+            border-radius: 20px;
+            padding: 25px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+
+        /* GRAPH */
+        .graph-container {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            border-left: 2px solid #2d3748;
+            border-bottom: 2px solid #2d3748;
+            margin-right: 70px; /* Space for % text */
+            margin-bottom: 10px;
+        }
+
+        .percentage-big {
+            position: absolute;
+            top: 20px;
+            right: 10px;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 3.5rem;
+            color: #2d3748;
+            line-height: 1;
+        }
+        
+        .svg-graph {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .svg-polyline { transition: all 0.5s ease; }
+        .svg-circle { transition: all 0.5s ease; }
+
+        /* PAST LIST */
+        .past-list { padding-left: 5px; }
+        .past-list li {
+            list-style: none;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .dot {
+            height: 12px;
+            width: 12px;
+            background-color: #2d3748;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow: auto; height: auto; }
+            .sidebar { width: 100%; height: auto; padding: 20px; border-right: none; border-bottom: 3px solid #2d3748; }
+            .bottom-grid { grid-template-columns: 1fr; height: auto; }
+            .table-container { overflow-x: auto; }
+            .percentage-big { font-size: 2.5rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="menu-icon-top"><i class="fas fa-bars"></i></div>
+        <div class="profile-pic"></div>
+        <div class="teacher-name">[NAME]</div>
+        <div class="divider"></div>
+        <div style="font-family: 'Gochi Hand'; font-size: 1.2rem;">TEACHER PORTAL</div>
+        <a href="index.html" class="back-btn">Back to Dashboard</a>
+    </aside>
+
+    <main class="main-content">
+        
+        <h1 class="page-header">TEST / EXAM</h1>
+
+        <div class="grade-tabs">
+            <button class="tab-btn" onclick="loadGrade(4, this)">GRADE 4</button>
+            <button class="tab-btn active" onclick="loadGrade(5, this)">GRADE 5</button>
+            <button class="tab-btn" onclick="loadGrade(6, this)">GRADE 6</button>
+            <button class="tab-btn" onclick="loadGrade(7, this)">GRADE 7</button>
+            <button class="tab-btn" onclick="loadGrade(8, this)">GRADE 8</button>
+        </div>
+
+        <div class="action-bar">
+            <div class="filters">
+                <button class="filter-btn active">ALL TEST</button>
+                <button class="filter-btn">PENDING</button>
+                <button class="filter-btn">CHECKED</button>
+            </div>
+            <button class="create-btn">
+                <i class="fas fa-plus-circle"></i> CREATE NEW
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>TEST NAME</th>
+                        <th>SUBJECT</th>
+                        <th>GRADE</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+                <tbody id="test-table-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="bottom-grid">
+            
+            <div class="bottom-card">
+                <div class="card-title">OVERALL PERFORMANCE</div>
+                <div class="graph-container">
+                    <svg class="svg-graph" viewBox="0 0 100 50" preserveAspectRatio="none">
+                        <polyline id="graph-line" points="" fill="none" stroke="#2d3748" stroke-width="2" class="svg-polyline" />
+                        <circle id="c1" cx="5" cy="0" r="3" fill="#2d3748" class="svg-circle" />
+                        <circle id="c2" cx="30" cy="0" r="3" fill="#2d3748" class="svg-circle" />
+                        <circle id="c3" cx="60" cy="0" r="3" fill="#2d3748" class="svg-circle" />
+                        <circle id="c4" cx="95" cy="0" r="3" fill="#2d3748" class="svg-circle" />
+                    </svg>
+                </div>
+                <div class="percentage-big" id="overall-percentage">
+                    <span>↑</span>70%
+                </div>
+            </div>
+
+            <div class="bottom-card">
+                <div class="card-title">PAST TEST / EXAMS</div>
+                <ul class="past-list" id="past-exams-list">
+                    </ul>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        const gradeData = {
+            4: {
+                table: [
+                    { name: "BASIC ARITHMETIC", subject: "MATHS", status: "CHECKED" },
+                    { name: "PLANTS LIFE", subject: "SCIENCE", status: "PENDING" },
+                    { name: "GRAMMAR QUIZ", subject: "ENGLISH", status: "CHECKED" },
+                    { name: "LOCAL MAPS", subject: "S.S", status: "PENDING" }
+                ],
+                graphPoints: "5,35 30,25 60,15 95,5",
+                circles: [35, 25, 15, 5],
+                percentage: "85%",
+                past: ["Final Term Math", "Science Unit 1", "English Oral Test"]
+            },
+            5: {
+                table: [
+                    { name: "FRACTIONS", subject: "MATHS", status: "PENDING" },
+                    { name: "STATES OF MATTER", subject: "SCIENCE", status: "CHECKED" },
+                    { name: "COMPREHENSION", subject: "ENGLISH", status: "CHECKED" },
+                    { name: "INDIAN HISTORY", subject: "S.S", status: "PENDING" }
+                ],
+                graphPoints: "5,45 30,35 60,25 95,15",
+                circles: [45, 35, 25, 15],
+                percentage: "70%",
+                past: ["Math Unit Test 2", "Science Lab Quiz", "History Chapter 4"]
+            },
+            6: {
+                table: [
+                    { name: "ALGEBRA INTRO", subject: "MATHS", status: "CHECKED" },
+                    { name: "ANCIENT CIVS", subject: "S.S", status: "CHECKED" },
+                    { name: "FORCE & MOTION", subject: "SCIENCE", status: "PENDING" },
+                    { name: "POETRY", subject: "ENGLISH", status: "CHECKED" }
+                ],
+                graphPoints: "5,40 30,45 60,30 95,20",
+                circles: [40, 45, 30, 20],
+                percentage: "65%",
+                past: ["Algebra Pop Quiz", "Civics Mid-Term", "Physics Intro"]
+            },
+            7: {
+                table: [
+                    { name: "GEOMETRY", subject: "MATHS", status: "PENDING" },
+                    { name: "ACIDS & BASES", subject: "SCIENCE", status: "PENDING" },
+                    { name: "WORLD WAR I", subject: "S.S", status: "CHECKED" },
+                    { name: "ESSAY WRITING", subject: "ENGLISH", status: "CHECKED" }
+                ],
+                graphPoints: "5,30 30,20 60,15 95,10",
+                circles: [30, 20, 15, 10],
+                percentage: "78%",
+                past: ["Geometry Basics", "Chemistry Lab 1", "History Exam"]
+            },
+            8: {
+                table: [
+                    { name: "TRIGONOMETRY", subject: "MATHS", status: "CHECKED" },
+                    { name: "CELL BIOLOGY", subject: "SCIENCE", status: "CHECKED" },
+                    { name: "ECONOMICS", subject: "S.S", status: "PENDING" },
+                    { name: "LITERATURE", subject: "ENGLISH", status: "PENDING" }
+                ],
+                graphPoints: "5,25 30,15 60,10 95,5",
+                circles: [25, 15, 10, 5],
+                percentage: "82%",
+                past: ["Math Finals Prep", "Biology Dissection", "Econ Quiz 1"]
+            }
+        };
+
+        function loadGrade(grade, btnElement) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+
+            const data = gradeData[grade];
+            const tbody = document.getElementById('test-table-body');
+            tbody.innerHTML = '';
+            data.table.forEach(row => {
+                const statusClass = row.status === 'PENDING' ? 'pending' : 'checked';
+                const tr = `
+                    <tr>
+                        <td>${row.name}</td>
+                        <td>${row.subject}</td>
+                        <td>${grade}</td>
+                        <td><span class="status ${statusClass}">${row.status}</span></td>
+                    </tr>
+                `;
+                tbody.innerHTML += tr;
+            });
+
+            document.getElementById('graph-line').setAttribute('points', data.graphPoints);
+            document.getElementById('c1').setAttribute('cy', data.circles[0]);
+            document.getElementById('c2').setAttribute('cy', data.circles[1]);
+            document.getElementById('c3').setAttribute('cy', data.circles[2]);
+            document.getElementById('c4').setAttribute('cy', data.circles[3]);
+
+            document.getElementById('overall-percentage').innerHTML = `<span>↑</span>${data.percentage}`;
+
+            const list = document.getElementById('past-exams-list');
+            list.innerHTML = '';
+            data.past.forEach(item => {
+                list.innerHTML += `<li><span class="dot"></span> ${item}</li>`;
+            });
+        }
+
+        window.onload = function() {
+            const buttons = document.querySelectorAll('.tab-btn');
+            loadGrade(5, buttons[1]); 
+        };
+    </script>
+
+</body>
+</html>

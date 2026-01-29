@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edu-Connect AI - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Gochi+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. RESET & BASE STYLES --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background-color: #ebf8ff;
+        }
+
+        /* --- 2. BACKGROUND --- */
+        body {
+            position: relative;
+            background-image: 
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 500' width='500' height='500' opacity='0.15'%3E%3Cstyle%3E path, circle, rect { fill: none; stroke: %232d3748; stroke-width: 2px; } %3C/style%3E%3Cpath d='M50 80 Q50 50 80 50 T110 80 V130 H50 Z M60 80 H100 M80 50 V40' transform='translate(20, 20)' /%3E%3Cpath d='M200 60 Q200 80 230 80 T260 60 V100 Q260 120 230 120 T200 100 Z M230 80 V120' transform='translate(0, 10)' /%3E%3Cpath d='M350 70 L380 55 L410 70 L380 85 Z M410 70 V90 M380 85 V100' /%3E%3Crect x='50' y='250' width='80' height='20' transform='rotate(-45 90 260)' /%3E%3Cpath d='M200 250 L210 240 L240 270 L230 280 Z M200 250 L195 265 L210 260' /%3E%3Cpath d='M380 250 Q370 240 360 250 Q360 280 380 290 Q400 280 400 250 Q390 240 380 250 M380 250 V240' /%3E%3Cpath d='M100 400 Q100 380 120 380 Q140 380 140 400 Q140 410 130 420 H110 Q100 410 100 400 M115 420 V430 H125 V420' /%3E%3Cpath d='M250 400 L230 430 L250 420 L270 430 Z' /%3E%3Cpath d='M400 400 L390 440 H410 L400 400 V380 H395 H405' /%3E%3C/svg%3E"),
+                radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 50%),
+                radial-gradient(circle at 90% 90%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 50%);
+            background-size: 400px 400px, cover, cover;
+            background-repeat: repeat, no-repeat, no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- 3. SHARED CARD STYLES --- */
+        .card {
+            background-color: white;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 550px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .hidden { display: none !important; }
+
+        /* --- 4. SELECTION SCREEN --- */
+        .left-col {
+            flex: 1;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-right: 1px solid #f0f0f0;
+        }
+        .logo-container { width: 180px; height: 180px; margin-bottom: 20px; }
+        .logo-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+        .brand-name { color: #2b6cb0; font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; }
+        .brand-subtitle { color: #718096; font-size: 0.95rem; font-weight: 500; margin-bottom: 35px; }
+        .welcome-heading { color: #1a365d; font-size: 2rem; font-weight: 800; line-height: 1.3; text-transform: uppercase; }
+
+        .right-col {
+            flex: 1;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #fafbfd;
+        }
+        .select-heading { color: #2c5282; font-size: 1.4rem; font-weight: 700; text-transform: uppercase; margin-bottom: 40px; }
+        .buttons-container { width: 100%; max-width: 350px; display: flex; flex-direction: column; gap: 25px; }
+        .role-btn {
+            display: flex; align-items: center; justify-content: center;
+            width: 100%; padding: 20px; border: none; border-radius: 50px;
+            cursor: pointer; text-decoration: none; color: white;
+            font-size: 1.25rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; transition: filter 0.2s ease, transform 0.2s;
+        }
+        .role-btn:hover { filter: brightness(1.05); transform: translateY(-2px); }
+        .btn-teacher { background: linear-gradient(90deg, #2ab5d6 0%, #158db5 100%); }
+        .btn-student { background: linear-gradient(90deg, #ff7e5f 0%, #feb47b 100%); }
+        .btn-parent  { background: linear-gradient(90deg, #10b981 0%, #059669 100%); }
+        .role-btn i { margin-right: 15px; font-size: 1.4rem; }
+
+        /* --- 5. LOGIN SCREEN --- */
+        #login-screen {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .login-inner-box {
+            border: 3px solid #2d3748;
+            border-radius: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+        }
+
+        .login-title {
+            font-family: 'Gochi Hand', cursive; 
+            font-size: 3rem;
+            color: #2d3748;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .image-oval-container {
+            width: 220px;
+            height: 170px;
+            margin: 20px auto 40px auto;
+            border: 3px solid #2d3748;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-oval-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .input-group { margin-bottom: 25px; text-align: left; }
+        
+        .input-label {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #2d3748;
+        }
+
+        .sketch-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 3px solid #2d3748;
+            border-radius: 15px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            background: #fff;
+        }
+        .sketch-input:focus { background-color: #f7fafc; border-color: #2b6cb0; }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #718096;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .back-btn:hover { color: #2d3748; }
+
+        .submit-btn {
+            background-color: #2d3748;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Gochi Hand', cursive;
+            margin-top: 10px;
+        }
+        .submit-btn:hover { opacity: 0.9; transform: scale(1.02); }
+
+        @media (max-width: 850px) {
+            .card { flex-direction: column; height: auto; max-width: 90%; margin: 40px 0; }
+            .left-col { border-right: none; border-bottom: 1px solid #eee; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="selection-screen">
+        <div class="left-col">
+            <div class="logo-container">
+                <img src="logo.jpeg" alt="EDU-CONNECT AI Logo">
+            </div>
+            <div class="brand-name">EDU-CONNECT AI</div>
+            <div class="brand-subtitle">Personalized Learning for All</div>
+            <h1 class="welcome-heading">Welcome to AI<br>Multigrade Classroom</h1>
+        </div>
+
+        <div class="right-col">
+            <h2 class="select-heading">Select Your Position</h2>
+            <div class="buttons-container">
+                <button class="role-btn btn-teacher" onclick="openLogin('teacher')">
+                    <i class="fas fa-chalkboard-user"></i> Teacher
+                </button>
+                <button class="role-btn btn-student" onclick="openLogin('student')">
+                    <i class="fas fa-graduation-cap"></i> Student
+                </button>
+                <button class="role-btn btn-parent" onclick="openLogin('parent')">
+                    <i class="fas fa-users"></i> Parent
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card hidden" id="login-screen">
+        <button class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+
+        <div class="login-inner-box">
+            <h1 class="login-title" id="dynamic-title">LOGIN</h1>
+            
+            <div class="image-oval-container">
+                <img id="dynamic-img" src="" alt="Role Avatar">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">USERNAME :</label>
+                <input type="text" id="user" class="sketch-input" placeholder="Enter ID">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">PASSWORD :</label>
+                <input type="password" id="pass" class="sketch-input" placeholder="••••••••">
+            </div>
+
+            <button class="submit-btn" id="login-trigger">Enter Classroom</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. CONFIGURATION ---
+        const roleData = {
+            teacher: { title: "TEACHER LOGIN", img: "teacher.jpeg" },
+            student: { title: "STUDENT LOGIN", img: "student.jpeg" },
+            parent: { title: "PARENT LOGIN", img: "parent.jpeg" }
+        };
+
+        let activeRole = "";
+
+        // --- 2. SWITCH TO LOGIN SCREEN ---
+        function openLogin(role) {
+            activeRole = role; 
+            const data = roleData[role];
+            
+            document.getElementById('dynamic-title').innerText = data.title;
+            document.getElementById('dynamic-img').src = data.img;
+            
+            document.getElementById('selection-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+
+            // Attach click event to the Submit Button
+            document.getElementById('login-trigger').onclick = function() {
+                submitLogin(activeRole);
+            };
+        }
+
+        // --- 3. GO BACK FUNCTION ---
+        function goBack() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('selection-screen').classList.remove('hidden');
+            // Clear inputs
+            document.getElementById('user').value = "";
+            document.getElementById('pass').value = "";
+        }
+
+        // --- 4. REDIRECT FUNCTION (Helper) ---
+        function performRedirect(role) {
+            if (role === "student") {
+                window.location.href = "student.html";
+            } else if (role === "teacher") {
+                window.location.href = "teacher.html";
+            } else if (role === "parent") {
+                window.location.href = "parent.html";
+            }
+        }
+
+        // --- 5. MAIN SUBMIT FUNCTION ---
+        async function submitLogin(role) {
+            const username = document.querySelector("#user").value;
+            const password = document.querySelector("#pass").value;
+
+            // Simple validation: Ensure fields aren't empty
+            if (!username || !password) {
+                alert("Please enter both username and password.");
+                return;
+            }
+
+            try {
+                // Attempt to contact Backend
+                const res = await fetch("http://localhost:3000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    // FIX: Sending 'username' instead of 'id' to match backend
+                    body: JSON.stringify({ role, username, password })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    // Success! Redirect to the specific page
+                    performRedirect(role);
+                } else {
+                    alert("Invalid Credentials");
+                }
+
+            } catch (error) {
+                // FALLBACK FOR PROTOTYPE (Offline Mode)
+                // If backend is not running, we log it but STILL REDIRECT so you can test.
+                console.warn("Backend not detected. Switching to Offline Prototype Mode.");
+                alert("Offline Mode: Redirecting to Dashboard...");
+                performRedirect(role);
+            }
+        }
+    </script>
+
+</body>
+</html>

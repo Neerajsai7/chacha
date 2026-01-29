@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Quizzes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Gochi+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff3e0; /* Student Theme */
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 3px solid #2d3748;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            height: 100%;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-title {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 2rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #2d3748;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        .subject-btn {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 3px solid #2d3748;
+            border-radius: 20px; /* Rounded per sketch */
+            background: white;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.4rem;
+            color: #2b6cb0; 
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .subject-btn:hover, .subject-btn.active {
+            background-color: #ebf8ff;
+            transform: scale(1.05);
+            border-color: #2b6cb0;
+            font-weight: bold;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .page-header {
+            border: 3px solid #2d3748;
+            border-radius: 20px;
+            padding: 15px 40px;
+            background-color: white;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 3rem;
+            color: #2d3748;
+            margin-bottom: 40px;
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 5px 5px 0px rgba(45, 55, 72, 0.2);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-family: 'Gochi Hand', cursive;
+            text-decoration: none;
+            color: #2d3748;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* --- QUIZ GRID --- */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 2 Columns per sketch */
+            gap: 25px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .quiz-card {
+            background: white;
+            border: 3px solid #2d3748;
+            border-radius: 25px;
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            height: 100px;
+        }
+
+        .quiz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 5px 5px 0px rgba(45, 55, 72, 0.2);
+            background-color: #fafbfd;
+        }
+
+        .quiz-title {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.8rem;
+            color: #2d3748;
+        }
+
+        .score-pill {
+            border: 2px solid #2d3748;
+            border-radius: 50px;
+            padding: 5px 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #e53e3e; /* Red color for score text */
+            background-color: white;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        @media (max-width: 900px) {
+            .quiz-grid { grid-template-columns: 1fr; }
+            body { flex-direction: column; overflow: auto; }
+            .sidebar { width: 100%; height: auto; padding: 20px; border-right: none; border-bottom: 3px solid #2d3748; }
+            .subject-btn { width: 48%; display: inline-block; margin: 1%; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-title">SUBJECTS <i class="fas fa-chevron-down"></i></div>
+
+        <button class="subject-btn active" onclick="loadQuizzes('maths')">MATHS</button>
+        <button class="subject-btn" onclick="loadQuizzes('science')">SCIENCE</button>
+        <button class="subject-btn" onclick="loadQuizzes('english')">ENGLISH</button>
+        <button class="subject-btn" onclick="loadQuizzes('ss')">S.S</button>
+    </aside>
+
+    <main class="main-content">
+        <a href="student.html" class="back-btn"><i class="fas fa-arrow-left"></i> Dashboard</a>
+
+        <div class="page-header">
+            QUIZZES / GAMES
+        </div>
+
+        <div class="quiz-grid" id="quiz-container">
+            </div>
+    </main>
+
+    <script>
+        // --- YOUR LINKS GO HERE ---
+        // Replace the '#' with your actual Google Form or Quiz URL
+        const quizData = {
+            maths: [
+                { name: "Lesson 1: Algebra", link: "https://www.khanacademy.org/math/algebra", score: "8/10" },
+                { name: "Lesson 2: Geometry", link: "https://www.khanacademy.org/math/geometry", score: "Pending" },
+                { name: "Lesson 3: Fractions", link: "#", score: "Pending" },
+                { name: "Lesson 4: Decimals", link: "#", score: "Pending" }
+            ],
+            science: [
+                { name: "Lesson 1: Solar System", link: "https://solarsystem.nasa.gov/", score: "10/10" },
+                { name: "Lesson 2: Plants", link: "#", score: "Pending" },
+                { name: "Lesson 3: Human Body", link: "#", score: "Pending" },
+                { name: "Lesson 4: Matter", link: "#", score: "Pending" }
+            ],
+            english: [
+                { name: "Lesson 1: Nouns", link: "#", score: "Pending" },
+                { name: "Lesson 2: Verbs", link: "#", score: "Pending" },
+                { name: "Lesson 3: Tenses", link: "#", score: "Pending" },
+                { name: "Lesson 4: Stories", link: "#", score: "Pending" }
+            ],
+            ss: [
+                { name: "Lesson 1: History", link: "#", score: "Pending" },
+                { name: "Lesson 2: Maps", link: "#", score: "Pending" },
+                { name: "Lesson 3: Govt", link: "#", score: "Pending" },
+                { name: "Lesson 4: Earth", link: "#", score: "Pending" }
+            ]
+        };
+
+        function loadQuizzes(subjectKey) {
+            const container = document.getElementById('quiz-container');
+            const quizzes = quizData[subjectKey];
+            
+            // Clear current content
+            container.innerHTML = '';
+
+            // Update Active Sidebar Button
+            document.querySelectorAll('.subject-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.innerText.toLowerCase() === (subjectKey === 'ss' ? 's.s' : subjectKey)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Generate Cards based on the sketch
+            quizzes.forEach(quiz => {
+                const cardHTML = `
+                    <div class="quiz-card" onclick="window.open('${quiz.link}', '_blank')">
+                        <div class="quiz-title">${quiz.name}</div>
+                        <div class="score-pill">
+                            ${quiz.score.includes('/') ? 'SCORE: ' + quiz.score : quiz.score}
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += cardHTML;
+            });
+        }
+
+        // Load Maths by default
+        loadQuizzes('maths');
+    </script>
+
+</body>
+</html>

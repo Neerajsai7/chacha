@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marks - Edu Connect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Gochi+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET & BASIC SETUP --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ebf8ff; /* Soft Blue Background */
+            height: 100vh;
+            display: flex;
+            color: #2d3748;
+        }
+
+        /* --- SIDEBAR (Same as other pages) --- */
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 3px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .menu-icon-top {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #cbd5e0;
+            margin-bottom: 10px;
+            background-image: url('teacher.jpeg'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .teacher-name {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background-color: #e2e8f0;
+            margin: 20px 0;
+        }
+
+        .back-btn {
+            margin-top: auto;
+            padding: 10px 20px;
+            background-color: #2d3748;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .back-btn:hover { background-color: #4a5568; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .page-header {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 2.5rem;
+            color: #2d3748;
+        }
+
+        /* --- TOP PROFILE SECTION --- */
+        .top-stats-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr;
+            gap: 20px;
+            height: 140px;
+        }
+
+        .stat-card {
+            background: white;
+            border: 2px solid #2d3748;
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center content */
+            position: relative;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+        }
+
+        /* Profile Card Specifics */
+        .profile-card-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            justify-content: flex-start;
+            padding-left: 10px;
+        }
+        
+        .student-circle {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #2d3748;
+            border-radius: 50%;
+            background-color: #edf2f7; /* Light gray placeholder */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #a0aec0;
+        }
+
+        .student-info h2 {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .student-details {
+            font-size: 1rem;
+            color: #718096;
+            font-weight: 500;
+        }
+
+        /* Progress Card Specifics */
+        .progress-content {
+            text-align: center;
+        }
+        .progress-label {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.2rem;
+            color: #718096;
+        }
+        .progress-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #38a169; /* Green */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Improving/Needs Card Specifics */
+        .split-stat {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .stat-half {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .stat-half:first-child { border-right: 2px solid #e2e8f0; }
+        
+        .stat-header { font-family: 'Gochi Hand', cursive; font-size: 1.1rem; color: #718096; margin-bottom: 5px; }
+        .stat-number { font-size: 2rem; font-weight: bold; color: #2d3748; display: flex; align-items: center; gap: 5px; }
+
+        /* --- SUBJECT TABS --- */
+        .subject-tabs {
+            display: flex;
+            gap: 0;
+            background: white;
+            border: 2px solid #2d3748;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 60px;
+        }
+
+        .subject-btn {
+            flex: 1;
+            border: none;
+            background: white;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.4rem;
+            color: #2d3748;
+            cursor: pointer;
+            border-right: 2px solid #2d3748;
+            transition: all 0.2s;
+        }
+        .subject-btn:last-child { border-right: none; }
+        .subject-btn:hover { background-color: #ebf8ff; }
+        .subject-btn.active { background-color: #2d3748; color: white; }
+
+        /* --- BOTTOM GRID SECTION --- */
+        .bottom-split {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr; /* Table takes more space */
+            gap: 20px;
+            flex: 1;
+            min-height: 300px;
+        }
+
+        /* Table Card */
+        .table-card {
+            background: white;
+            border: 2px solid #2d3748;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        
+        th {
+            background-color: white;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.3rem;
+            padding: 15px;
+            border-bottom: 2px solid #2d3748;
+            text-align: left;
+            border-right: 2px solid #2d3748;
+        }
+        th:last-child { border-right: none; }
+
+        td {
+            padding: 15px;
+            border-bottom: 2px solid #2d3748;
+            border-right: 2px solid #2d3748;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        td:last-child { border-right: none; }
+        tr:last-child td { border-bottom: none; }
+
+        /* Right Column (AI & Contact) */
+        .right-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-card {
+            background: white;
+            border: 2px solid #2d3748;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+        }
+
+        .ai-header {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #2b6cb0; /* Deep blue for AI */
+        }
+
+        .dashed-line {
+            width: 100%;
+            height: 1px;
+            border-bottom: 2px dashed #cbd5e0;
+            margin: 10px 0;
+        }
+
+        .ai-text {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #4a5568;
+        }
+
+        .contact-header {
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .action-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-family: 'Gochi Hand', cursive;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .circle-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #2d3748;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        /* Interactive State for Checkbox */
+        .action-row.selected .circle-check {
+            background-color: #2d3748;
+            box-shadow: inset 0 0 0 3px white;
+        }
+
+        /* Mobile Response */
+        @media (max-width: 900px) {
+            body { flex-direction: column; height: auto; overflow: auto; }
+            .sidebar { width: 100%; padding: 20px; border-right: none; border-bottom: 3px solid #2d3748; height: auto; }
+            .top-stats-grid { grid-template-columns: 1fr; height: auto; }
+            .bottom-split { grid-template-columns: 1fr; }
+            .subject-tabs { flex-wrap: wrap; height: auto; }
+            .subject-btn { min-width: 50%; border-bottom: 2px solid #2d3748; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="menu-icon-top"><i class="fas fa-bars"></i></div>
+        <div class="profile-pic"></div>
+        <div class="teacher-name">[NAME]</div>
+        <div class="divider"></div>
+        <div style="font-family: 'Gochi Hand'; font-size: 1.2rem;">PARENT PORTAL</div>
+        <a href="index.html" class="back-btn">Log Out</a>
+    </aside>
+
+    <main class="main-content">
+        
+        <h1 class="page-header">STUDENT MARKS</h1>
+
+        <div class="top-stats-grid">
+            
+            <div class="stat-card profile-card-content">
+                <div class="student-circle"><i class="fas fa-user"></i></div>
+                <div class="student-info">
+                    <h2>ARYAN</h2>
+                    <div class="student-details">
+                        GRADE: 07 &nbsp;|&nbsp; AGE: 12
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="progress-content">
+                    <div class="progress-label">PROGRESS</div>
+                    <div class="progress-value">
+                        <i class="fas fa-arrow-up" style="font-size: 0.8em;"></i> 87%
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card" style="padding: 0;">
+                <div class="split-stat">
+                    <div class="stat-half">
+                        <div class="stat-header">IMPROVING</div>
+                        <div class="stat-number">
+                            <i class="fas fa-arrow-up" style="color: #38a169;"></i> 02
+                        </div>
+                    </div>
+                    <div class="stat-half">
+                        <div class="stat-header">NEEDS</div>
+                        <div class="stat-number">
+                            <i class="fas fa-exclamation-triangle" style="color: #ed8936; font-size: 0.8em;"></i> 01
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="subject-tabs">
+            <button class="subject-btn active" onclick="filterTable('all', this)">ALL</button>
+            <button class="subject-btn" onclick="filterTable('MATHS', this)">MATHS</button>
+            <button class="subject-btn" onclick="filterTable('SCIENCE', this)">SCIENCE</button>
+            <button class="subject-btn" onclick="filterTable('S.S', this)">S.S</button>
+            <button class="subject-btn" onclick="filterTable('ENGLISH', this)">ENGLISH</button>
+        </div>
+
+        <div class="bottom-split">
+            
+            <div class="table-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>EXAM</th>
+                            <th>DATE</th>
+                            <th>SCORE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marks-table-body">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="right-col">
+                
+                <div class="info-card">
+                    <div class="ai-header">
+                        <i class="fas fa-robot"></i> AI INSIGHT
+                    </div>
+                    <div class="dashed-line"></div>
+                    <div class="ai-text">
+                        Aryan struggles with science concepts like <strong>States of Matter</strong>. Recommended: Visual learning aids.
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="contact-header">CONTACT TEACHER</div>
+                    <div class="dashed-line"></div>
+                    
+                    <div class="action-row" onclick="this.classList.toggle('selected')">
+                        <div class="circle-check"></div> SET REMINDER
+                    </div>
+                    <div class="action-row" onclick="this.classList.toggle('selected')">
+                        <div class="circle-check"></div> INFORMATION
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button style="background: #2d3748; color: white; border: none; padding: 8px 20px; border-radius: 20px; font-family: 'Gochi Hand'; cursor: pointer;">SEND MESSAGE</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Exam Data
+        const exams = [
+            { subject: "S.S", exam: "HISTORY", date: "12/01/2026", score: "45/50" },
+            { subject: "ENGLISH", exam: "TENSES", date: "15/01/2026", score: "38/50" },
+            { subject: "SCIENCE", exam: "STATES OF MATTER", date: "20/01/2026", score: "30/50" },
+            { subject: "MATHS", exam: "FRACTIONS", date: "22/01/2026", score: "37/50" }
+        ];
+
+        function filterTable(subject, btnElement) {
+            // 1. Visual Tab Update
+            document.querySelectorAll('.subject-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // 2. Filter Data
+            const tbody = document.getElementById('marks-table-body');
+            tbody.innerHTML = ''; // Clear
+
+            exams.forEach(item => {
+                // Show if 'all' is selected OR subject matches
+                if (subject === 'all' || item.subject === subject) {
+                    const row = `
+                        <tr>
+                            <td>${item.exam}</td>
+                            <td>${item.date}</td>
+                            <td>${item.score}</td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                }
+            });
+
+            // If empty (no exams for that subject)
+            if (tbody.innerHTML === '') {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#a0aec0;">No recent exams found.</td></tr>';
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            // Find the "ALL" button and simulate a click to load initial data
+            const allBtn = document.querySelector('.subject-btn');
+            filterTable('all', allBtn);
+        };
+    </script>
+
+</body>
+</html>
